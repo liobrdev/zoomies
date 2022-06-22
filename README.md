@@ -6,7 +6,7 @@
 
 Clone this repo `git clone https://github.com/liobrdev/zoomies.git`
 
-Initalizie the database and run the backend code within the `/api` folder:
+Initialize the database and run the backend code within the `/api` folder:
 
 ```bash
 cd api
