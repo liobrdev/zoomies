@@ -23,7 +23,7 @@ In a different terminal or tab, build and run the frontend code within the `/fro
 ```bash
 cd frontend
 npm install
-npm build
+npm run build
 npm run start
 ```
 
