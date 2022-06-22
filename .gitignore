@@ -1,0 +1,25 @@
+# api
+__pycache__/
+api/*.py[cod]
+api/.mypy_cache/
+api/.pytest_cache/
+api/instance/
+api/venv/
+
+# certbot
+/certbot
+
+# frontend
+frontend/.next
+frontend/node_modules
+frontend/npm-debug.log*
+
+# nginx
+nginx/etc/nginx/conf.d/*.conf
+
+# misc
+*.pem
+/*.env
+/.vscode
+/secrets
+todo.txt
