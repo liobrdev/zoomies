@@ -12,7 +12,9 @@ def app():
     app = create_app({ 'TESTING': True })
 
     with app.app_context():
-        if not path.exists(path.join(app.instance_path, 'zoomies.sqlite')):
+        if not path.exists(path.join(
+            app.instance_path, 'db', 'zoomies.sqlite',
+        )):
             init_db()
 
     yield app

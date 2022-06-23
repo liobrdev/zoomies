@@ -13,7 +13,8 @@ def create_app(test_config: dict | None = None, behind_proxy: bool = False):
         'CACHE_DEFAULT_TIMEOUT': 60 * 60 * 24, 
         'CACHE_THRESHOLD': 100,
         'SQLALCHEMY_DATABASE_URI': \
-            'sqlite:///' + os.path.join(app.instance_path, 'zoomies.sqlite'),
+            'sqlite:///' +
+            os.path.join(app.instance_path, 'db', 'zoomies.sqlite'),
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     })
 

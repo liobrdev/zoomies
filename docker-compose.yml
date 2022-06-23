@@ -11,7 +11,7 @@ services:
       FLASK_APP: app
       FLASK_ENV: production
     volumes:
-      - ./api/instance/zoomies.sqlite:/api/instance/zoomies.sqlite:rw
+      - ./api/instance/db/:/api/instance/db/:rw
   frontend:
     build:
       context: ./frontend

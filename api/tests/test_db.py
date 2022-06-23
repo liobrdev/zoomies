@@ -15,4 +15,6 @@ def test_init_db_command(runner: FlaskCliRunner):
         'Initialized the database.\n'
     ) in result.output
 
-    assert path.exists(path.join(runner.app.instance_path, 'zoomies.sqlite'))
+    assert path.exists(path.join(
+        runner.app.instance_path, 'db', 'zoomies.sqlite',
+    ))
