@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ./api
-    command: gunicorn -b 0.0.0.0:8000 'app:create_app(None, True)'
+    command: gunicorn -b 0.0.0.0:8000 'app:create_app(behind_proxy=True)'
     ports:
       - 8000:8000
     environment:

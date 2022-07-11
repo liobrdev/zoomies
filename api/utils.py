@@ -1,29 +1,15 @@
 import asyncio
 import click
 
-from flask.cli import with_appcontext
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
+from flask_caching import Cache
 
 from httpx import AsyncClient, get
 from itertools import repeat
 
-
-db = SQLAlchemy()
-ma = Marshmallow()
+from models import Breed, db
 
 
-class Breed(db.Model):
-    breed_name = db.Column(db.String(80), primary_key=True)
-    thumbnail_url = db.Column(db.String(), nullable=False)
-
-    def __repr__(self):
-        return f"<Breed '{self.breed_name}'>"
-
-
-class BreedSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Breed
+cache = Cache()
 
 
 async def get_thumbnail(name: str, client: AsyncClient):
@@ -50,7 +36,7 @@ def init_db():
     click.echo('Fetching breeds...', nl=False)
 
     url = 'https://dog.ceo/api/breeds/list'
-    response = get('https://dog.ceo/api/breeds/list')
+    response = get(url)
     payload: dict[str, list[str] | str] = response.json()
 
     if (
@@ -82,10 +68,3 @@ def init_db():
 
     db.session.commit()
     click.echo('Initialized the database.')
-
-
-@click.command('init-db')
-@with_appcontext
-def init_db_command():
-    '''Clear the existing data and create new tables.'''
-    init_db()

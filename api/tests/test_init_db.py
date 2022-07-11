@@ -3,7 +3,7 @@ from os import path
 from click.testing import Result
 from flask.testing import FlaskCliRunner
 
-from db import init_db_command
+from commands import init_db_command
 
 
 def test_init_db_command(runner: FlaskCliRunner):

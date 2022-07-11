@@ -1,13 +1,9 @@
 from flask import request
-from flask_caching import Cache
 from flask_restful import Resource, abort
 from httpx import get
 
-from db import Breed, BreedSchema
-
-
-cache = Cache()
-breed_schema = BreedSchema()
+from models import Breed, BreedSchema
+from utils import cache
 
 
 @cache.memoize()
@@ -16,6 +12,8 @@ def count_breeds():
 
 
 class BreedsMaster(Resource):
+    breed_schema = BreedSchema()
+
     def get(self):
         queryset = []
         search = request.args.get('search', '', str)
@@ -30,7 +28,7 @@ class BreedsMaster(Resource):
 
         return {
             'count': count_breeds(),
-            'results': breed_schema.dump(queryset, many=True),
+            'results': self.breed_schema.dump(queryset, many=True),
         }
 
 

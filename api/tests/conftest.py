@@ -4,12 +4,12 @@ from flask import Flask
 from os import path
 
 from app import create_app
-from db import init_db
+from utils import init_db
 
 
 @pytest.fixture()
 def app():
-    app = create_app({ 'TESTING': True })
+    app = create_app()
 
     with app.app_context():
         if not path.exists(path.join(
@@ -22,7 +22,7 @@ def app():
 
 @pytest.fixture()
 def app_no_db():
-    return create_app({ 'TESTING': True })
+    return create_app()
 
 
 @pytest.fixture()

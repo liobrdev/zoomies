@@ -5,8 +5,8 @@ from flask_cors import CORS
 from flask_restful import Api
 
 
-def create_app(test_config: dict | None = None, behind_proxy: bool = False):
-    app = Flask(__name__, instance_relative_config=True) 
+def create_app(behind_proxy: bool = False):
+    app = Flask(__name__) 
     app.url_map.strict_slashes = False
     app.config.from_mapping({
         'CACHE_TYPE': 'SimpleCache',
@@ -18,13 +18,8 @@ def create_app(test_config: dict | None = None, behind_proxy: bool = False):
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     })
 
-    if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(test_config)
-
     try:
-        os.makedirs(app.instance_path)
+        os.makedirs(os.path.join(app.instance_path, 'db'))
     except OSError:
         pass
 
@@ -32,14 +27,18 @@ def create_app(test_config: dict | None = None, behind_proxy: bool = False):
     api = Api(api_blueprint)
     app.register_blueprint(api_blueprint)
 
-    from views import BreedsMaster, BreedsDetail, cache
-    api.add_resource(BreedsMaster, '/breeds')
-    api.add_resource(BreedsDetail, '/breeds/<slug>')
-    cache.init_app(app)
-
-    from db import db, ma, init_db_command
+    from models import db, ma
     db.init_app(app)
     ma.init_app(app)
+
+    from views import BreedsMaster, BreedsDetail
+    api.add_resource(BreedsMaster, '/breeds')
+    api.add_resource(BreedsDetail, '/breeds/<slug>')
+
+    from utils import cache
+    cache.init_app(app)
+
+    from commands import init_db_command
     app.cli.add_command(init_db_command)
 
     CORS(
@@ -54,9 +53,6 @@ def create_app(test_config: dict | None = None, behind_proxy: bool = False):
 
     if behind_proxy:
         from werkzeug.middleware.proxy_fix import ProxyFix
-
-        app.wsgi_app = ProxyFix(
-            app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
-        )
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     return app
